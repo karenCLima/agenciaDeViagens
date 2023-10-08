@@ -1,0 +1,37 @@
+#Testando o Customer:
+
+{
+	"name":"Julia",
+	"cpf": "18080050074",
+	"email": "julia@teste.com",
+	"passportNumber": "CS152369",
+	"password": "Teste#123"
+}
+
+{
+	"name":"Amalia",
+	"cpf": "32643701070",
+	"email": "amalia@teste.com",
+	"passportNumber": "MN123658",
+	"password": "Teste#456"
+}
+
+#Testando Travel Package
+
+{
+	"country":"Brasil",
+	"place":"Rio de Janeiro",
+	"travelDurationInDays": 4,
+	"price":1200.00
+}
+
+#Testando ticket
+
+{
+	"customer_Id":1,
+	"bookedDate":"2023-10-02T14:30:00.000",
+	"travelDate":"2024-01-25T07:30:00.000",
+	"ticketType":"PRIMEIRA_CLASSE",
+	"flightNumber":525652521555522,
+	"travelPackage_Id":1
+}
