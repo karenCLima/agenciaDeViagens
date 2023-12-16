@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.agenciaDeViagens.controller.dto.CustomerRequest;
 import com.spring.agenciaDeViagens.controller.dto.CustomerResponse;
+import com.spring.agenciaDeViagens.controller.exception.CpfNotFoundError;
 import com.spring.agenciaDeViagens.controller.exception.PassportNumberValidationError;
 import com.spring.agenciaDeViagens.controller.exception.PasswordValidationError;
 import com.spring.agenciaDeViagens.service.CustomerService;
@@ -51,7 +52,7 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/cpf/{cpf}")
-	public CustomerResponse getCustomerByCpf(@PathVariable String cpf) {
+	public CustomerResponse getCustomerByCpf(@PathVariable String cpf) throws CpfNotFoundError {
 		return customerService.getCustomerByCpf(cpf);
 		
 	}
@@ -62,7 +63,7 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<CustomerResponse> updateCustomer(@RequestBody CustomerRequest customerRequest, @PathVariable Integer id){
+	public ResponseEntity<CustomerResponse> updateCustomer(@RequestBody CustomerRequest customerRequest, @PathVariable Integer id) throws PasswordValidationError, PassportNumberValidationError{
 		return ResponseEntity.ok(customerService.updateCustomer(customerRequest, id));
 	}
 

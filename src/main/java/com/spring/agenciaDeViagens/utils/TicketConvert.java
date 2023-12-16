@@ -49,7 +49,7 @@ public class TicketConvert {
 	
 	public static Page<TicketResponse> toResponsePage(Page<Ticket> tickets){
 		List<TicketResponse> ticketResponses = new ArrayList<>();
-		for(Ticket ticket: tickets) {
+		for(Ticket ticket: tickets.getContent()) {
 			TicketResponse ticketResponse = TicketConvert.toResponse(ticket);
 			ticketResponses.add(ticketResponse);
 		}

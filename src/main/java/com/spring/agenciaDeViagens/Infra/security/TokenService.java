@@ -43,6 +43,8 @@ public class TokenService {
 
             return verifier.verify(token).getSubject();
         } catch (JWTVerificationException exception){
+        	System.out.println(new Date(System.currentTimeMillis() + 3600000));
+        	System.err.println("Token verification failed: " + exception.getMessage());
             throw new RuntimeException("invalid token");
         }
     }

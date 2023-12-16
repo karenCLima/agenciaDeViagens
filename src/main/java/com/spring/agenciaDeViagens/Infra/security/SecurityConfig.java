@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                        .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET,"/")).permitAll()
                        .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/customer")).permitAll()
+                       .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/customer/cpf/{cpf}")).permitAll()
                        .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/login")).permitAll()
                        .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

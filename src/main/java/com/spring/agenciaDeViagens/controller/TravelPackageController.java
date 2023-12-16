@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,14 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.querydsl.core.types.Predicate;
 import com.spring.agenciaDeViagens.controller.dto.TravelPackageRequest;
 import com.spring.agenciaDeViagens.controller.dto.TravelPackageResponse;
+import com.spring.agenciaDeViagens.controller.exception.NotValidParamError;
 import com.spring.agenciaDeViagens.service.TravelPackageService;
 
 import jakarta.validation.Valid;
 
 @RestController
+@Validated
 @RequestMapping("/travel-package")
 public class TravelPackageController {
 	
@@ -38,7 +40,7 @@ public class TravelPackageController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<TravelPackageResponse> saveTravelPackage(@Valid @RequestBody TravelPackageRequest travelPackageRequest) {
+	public ResponseEntity<TravelPackageResponse> saveTravelPackage(@Valid @RequestBody TravelPackageRequest travelPackageRequest) throws NotValidParamError {
 		TravelPackageResponse travelPackageResponse = travelPackageService.saveTravelPackage(travelPackageRequest);
 		return ResponseEntity.created(URI.create("/travel-package/" + travelPackageResponse.getId())).body(travelPackageResponse);
 	}
@@ -67,8 +69,8 @@ public class TravelPackageController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<TravelPackageResponse> updateTravelPackage(
-			@RequestBody TravelPackageRequest travelPackageRequest,
-			@PathVariable Integer id){
+			@Valid @RequestBody TravelPackageRequest travelPackageRequest,
+			@PathVariable Integer id) throws NotValidParamError{
 		return ResponseEntity.ok(travelPackageService.updateTravelPackage(travelPackageRequest, id));
 	}
 	

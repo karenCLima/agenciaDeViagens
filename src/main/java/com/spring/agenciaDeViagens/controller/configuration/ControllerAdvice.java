@@ -1,6 +1,7 @@
 package com.spring.agenciaDeViagens.controller.configuration;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.spring.agenciaDeViagens.controller.exception.CpfNotFoundError;
+import com.spring.agenciaDeViagens.controller.exception.NotValidParamError;
 import com.spring.agenciaDeViagens.controller.exception.PassportNumberValidationError;
 import com.spring.agenciaDeViagens.controller.exception.PasswordValidationError;
 import com.spring.agenciaDeViagens.controller.exception.ValidationError;
@@ -48,5 +51,23 @@ public class ControllerAdvice {
     @ExceptionHandler(PassportNumberValidationError.class)
     public String handlerPassport(PassportNumberValidationError exception){
         return exception.getDescription();
+    }
+    
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(CpfNotFoundError.class)
+    public String handlerCpf(CpfNotFoundError exception){
+        return exception.getDescription();
+    }
+    
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoSuchElementException.class)
+    public String handleNoSuchElementException(NoSuchElementException e) {
+        return e.getMessage(); 
+    }
+    
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotValidParamError.class)
+    public String handleNotValidParam(NotValidParamError e) {
+        return e.getDescription(); 
     }
 }

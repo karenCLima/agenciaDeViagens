@@ -1,6 +1,7 @@
 package com.spring.agenciaDeViagens.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,13 +25,22 @@ import com.spring.agenciaDeViagens.utils.TicketConvert;
 @Service
 public class TicketService {
 	
-	@Autowired
+	
 	TicketRepository ticketRepository;
-	@Autowired
+	
 	CustomerRepository customerRepository;
-	@Autowired
+	
 	TravelPackageRepository travelPackageRepository;
 	
+	@Autowired
+	public TicketService(TicketRepository ticketRepository, CustomerRepository customerRepository,
+			TravelPackageRepository travelPackageRepository) {
+		super();
+		this.ticketRepository = ticketRepository;
+		this.customerRepository = customerRepository;
+		this.travelPackageRepository = travelPackageRepository;
+	}
+
 	public Page<TicketResponse> getAllTickets(int page, int size, String direction){
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(direction), "customer");
 		Page<Ticket> tickets = ticketRepository.findAll(pageRequest);
@@ -39,7 +49,9 @@ public class TicketService {
 	
 	public TicketResponse saveTicket(TicketRequest ticketRequest) {
 		Customer customer = customerRepository.findById(ticketRequest.getCustomer_Id()).get();
+		if(customer == null) throw new NoSuchElementException("Customer Id not found");
 		TravelPackage travelPackage = travelPackageRepository.findById(ticketRequest.getTravelPackage_Id()).get();
+		if(travelPackage == null) throw new NoSuchElementException("Travel Package Id not found");
 		Ticket ticket = TicketConvert.toEntity(ticketRequest, customer, travelPackage);
 		ticket.setActive(true);
 		return TicketConvert.toResponse(ticketRepository.save(ticket));
@@ -67,7 +79,9 @@ public class TicketService {
 	
 	public TicketResponse updateTicket(TicketRequest ticketRequest, Integer id) {
 		Customer customer = customerRepository.findById(ticketRequest.getCustomer_Id()).get();
+		if(customer == null) throw new NoSuchElementException("Customer Id not found");
 		TravelPackage travelPackage = travelPackageRepository.findById(ticketRequest.getTravelPackage_Id()).get();
+		if(travelPackage == null) throw new NoSuchElementException("Travel Package Id not found");
 		Ticket ticket = TicketConvert.toEntity(ticketRequest,customer, travelPackage);
 		ticket.setId(id);
 		ticket.setActive(true);

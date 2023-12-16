@@ -8,11 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.spring.agenciaDeViagens.controller.dto.TravelPackageRequest;
 import com.spring.agenciaDeViagens.controller.dto.TravelPackageResponse;
+import com.spring.agenciaDeViagens.controller.exception.NotValidParamError;
 import com.spring.agenciaDeViagens.model.QTravelPackage;
 import com.spring.agenciaDeViagens.model.TravelPackage;
 import com.spring.agenciaDeViagens.repository.TravelPackageRepository;
@@ -33,9 +35,16 @@ public class TravelPackageService {
 		return TravelPackageConvert.toResponsePage(travelPackageRepository.findAll(pageable));
 	}
 	
-	public TravelPackageResponse saveTravelPackage(TravelPackageRequest travelPackageRequest) {
+	public TravelPackageResponse saveTravelPackage(TravelPackageRequest travelPackageRequest) throws NotValidParamError {
+		System.out.println("eu passei aqui:" + travelPackageRequest.toString());
 		TravelPackage travelPackage = TravelPackageConvert.toEntity(travelPackageRequest);
-		travelPackage.setActive(true);
+		if(travelPackage.getPrice().compareTo(new BigDecimal("100.00")) <= 0) { 
+			throw new NotValidParamError("Price can not be less than 100");
+		}else if(travelPackage.getTravelDurationInDays() < 2) { 
+			throw new NotValidParamError("Travel duration can not be less than 2");
+		}else {
+				travelPackage.setActive(true);
+		}
 		return TravelPackageConvert.toResponse(travelPackageRepository.save(travelPackage));
 	}
 	
@@ -63,10 +72,17 @@ public class TravelPackageService {
 		travelPackageRepository.save(travelPackage);
 	}
 	
-	public TravelPackageResponse updateTravelPackage(TravelPackageRequest travelPackageRequest, Integer id) {
+	public TravelPackageResponse updateTravelPackage(TravelPackageRequest travelPackageRequest, Integer id) throws NotValidParamError {
+		System.out.println("Passei aqui");
 		TravelPackage travelPackage = TravelPackageConvert.toEntity(travelPackageRequest);
-		travelPackage.setId(id);
-		travelPackage.setActive(true);
+		if(travelPackage.getPrice().compareTo(BigDecimal.valueOf(100)) <= 0) { 
+			throw new NotValidParamError("Price can not be less than 100");
+		} else if(travelPackage.getTravelDurationInDays() < 2) {
+			throw new NotValidParamError("Travel duration can not be less than 2");
+		} else {
+			travelPackage.setId(id);
+			travelPackage.setActive(true);
+		}
 		return TravelPackageConvert.toResponse(travelPackageRepository.save(travelPackage));
 	}
 
